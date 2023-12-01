@@ -16,6 +16,10 @@ app.config['MONGO_URI']="mongodb+srv://khoatranpc:khoatranpc603@cluster0.ujmwmqk
 mongo = PyMongo(app)
 db=mongo.db
 
+
+@app.route('/')
+def firstConnect():
+    return 'Created By Trần Đăng Khoa'
 @app.route('/test-cnn')
 def tesCnn():
     # Tạo dữ liệu mẫu dưới dạng JSON
