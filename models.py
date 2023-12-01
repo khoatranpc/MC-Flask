@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
@@ -32,10 +33,23 @@ def predicWithRandomForest(dataTest, dataTrain):
 
     # Dự đoán nhãn
     predicted_label = model.predict(new_features)
-    print("Predicted Label:", predicted_label[0])
+
+    # Tính ma trận confusion
+    conf_matrix = confusion_matrix(y_test, predictions)
+
+    # Tính precision, recall và F1-Score
+    precision = precision_score(y_test, predictions, average='weighted')
+    recall = recall_score(y_test, predictions, average='weighted')
+    f1 = f1_score(y_test, predictions, average='weighted')
+
     return {
-        "classifyLevel": predicted_label[0],
+        "predict": {
+            "result": predicted_label[0],
+            "precision": precision,
+            "recall": recall,
+            "f1": f1,
+            "candidate": dataTest
+        },
         "accuracy": accuracy,
-        "candidate": dataTest,
         "dataTrain": dataTrain
     }
