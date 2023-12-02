@@ -28,7 +28,6 @@ class Candidate:
                     "$unwind": "$classifyLevel"
             })
         findCandidate = list(self.collection.aggregate(pipeline))
-        print(findCandidate)
         if len(findCandidate):
             return findCandidate[0]
         return None

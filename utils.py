@@ -55,10 +55,8 @@ def handleData(data: dict, isPredictCandidate: bool):
     arrayTech = [item.strip() for item in newData['technique'].split(',')]
     newData['technique'] = len(arrayTech)
     if 'classifyLevel' in newData:
-        print(newData['classifyLevel'])
         if not isPredictCandidate:
             if 'levelCode' in newData['classifyLevel']:
                 newData['classifyLevel'] = newData['classifyLevel']['levelCode']
-                print(newData['classifyLevel'])
         else: newData['classifyLevel'] = ""
     return  newData
