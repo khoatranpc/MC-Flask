@@ -1,7 +1,5 @@
 from flask import Flask, jsonify, request
-import numpy as np
 from flask_cors import CORS
-import json;
 from flask_pymongo import PyMongo;
 import utils
 from CandidateModel import Candidate
