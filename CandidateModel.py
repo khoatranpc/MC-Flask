@@ -62,6 +62,9 @@ class Candidate:
                 },
                 "classifyLevel": {
                     "$exists": True
+                },
+                "classifyRole": {
+                    "$exists": True
                 }
             })
             listDataTrain = []

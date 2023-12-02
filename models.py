@@ -1,11 +1,12 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 import numpy as np
 import json;
 
-def predicWithRandomForest(dataTest, dataTrain):
+def predicWithRandomForest(dataTest, dataTrain, label: str):
     # Dữ liệu mẫu
     # Chuyển đổi dữ liệu JSON thành list
     data = dataTrain
@@ -13,7 +14,7 @@ def predicWithRandomForest(dataTest, dataTrain):
 
     # Chia thành đặc trưng và nhãn
     features = np.array([[item["dob"], item["education"], item["expTimeTech"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in data])
-    labels = np.array([item["classifyLevel"] for item in data])
+    labels = np.array([item[label] for item in data])
 
     # Chia thành tập huấn luyện và tập kiểm thử
     X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
@@ -35,7 +36,9 @@ def predicWithRandomForest(dataTest, dataTrain):
     predicted_label = model.predict(new_features)
 
     # Tính ma trận confusion
-    conf_matrix = confusion_matrix(y_test, predictions)
+    # conf_matrix = confusion_matrix(y_test, predictions)
+    # y_pred = model.predict(X_test)
+    # print(classification_report(y_test, y_pred))
 
     # Tính precision, recall và F1-Score
     precision = precision_score(y_test, predictions, average='weighted')
@@ -48,8 +51,6 @@ def predicWithRandomForest(dataTest, dataTrain):
             "precision": precision,
             "recall": recall,
             "f1": f1,
-            "candidate": dataTest
         },
         "accuracy": accuracy,
-        "dataTrain": dataTrain
     }

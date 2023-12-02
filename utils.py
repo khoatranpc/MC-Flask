@@ -20,6 +20,11 @@ getScoreResourceApply = {
     "RF": 3,
     "LKD": 4
 }
+mapRoleToScore = {
+    "SP": 0,
+    "MT": 1,
+    "ST": 2
+}
 getScoreEducation  = {
     "BACHELOR": 1,
     "ENGINEER": 2,
@@ -41,7 +46,7 @@ def getNumberByBoolean(boolean):
 def handleData(data: dict, isPredictCandidate: bool):
     newData = {}
     for x in data:
-        if x == "dob" or x == "classifyLevel" or x == "education" or x == "expTimeTech" or x == "expTimeTech" or x == "graduatedUniversity" or x == "levelTechnique" or x == "resourceApply" or x == "scoreSoftsSkill" or x=="specializedIt" or x =="teacherCertification" or x=="technique":
+        if x == "classifyRole" or x == "dob" or x == "classifyLevel" or x == "education" or x == "expTimeTech" or x == "expTimeTech" or x == "graduatedUniversity" or x == "levelTechnique" or x == "resourceApply" or x == "scoreSoftsSkill" or x=="specializedIt" or x =="teacherCertification" or x=="technique":
             newData[x]=data[x]
     # handle data, parse string to number
     newData['dob'] = calculate_age(newData['dob'].date())

@@ -1,0 +1,130 @@
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.preprocessing import LabelEncoder
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score ,mean_squared_error
+
+import numpy as np
+import json;
+
+def get_modes(series):
+    modes = series.mode()
+    return list(modes) if not modes.empty else []
+
+def predicWithRandomForest(dataTest, dataTrain):
+    # Dữ liệu mẫu
+    # Chuyển đổi dữ liệu JSON thành list
+    data = dataTrain
+
+    listDataFeature = {
+            "dob": [],
+            "education": [],
+            "expTimeTech": [],
+            "graduatedUniversity": [],
+            "levelTechnique": [],
+            "resourceApply": [],
+            "scoreSoftsSkill": [],
+            "technique": [],
+            "classifyLevel":[],
+            "classifyRole":[],
+            "specializedIt": [],
+            "teacherCertification": []
+    }
+    
+    for i in range(len(dataTrain)):
+        getItemObj = dataTrain[i]
+        for key in getItemObj:
+            listDataFeature[key].append(getItemObj[key])
+    # label_encoder_role = LabelEncoder()
+    # label_encoder_level = LabelEncoder()
+
+    dataFrame = pd.DataFrame(listDataFeature)
+
+    # dataFrame['classifyRole'] = label_encoder_role.fit_transform(dataFrame['classifyRole'])
+    # dataFrame['classifyLevel'] = label_encoder_level.fit_transform(dataFrame['classifyLevel'])
+
+    X = dataFrame[['dob', 'education','expTimeTech','graduatedUniversity','levelTechnique','resourceApply','scoreSoftsSkill','technique','specializedIt','teacherCertification']]
+    y = dataFrame[['classifyRole', 'classifyLevel']]
+
+
+    # Chia thành tập huấn luyện và tập kiểm thử
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Khởi tạo và huấn luyện mô hình
+    model = RandomForestRegressor()
+    model.fit(X_train, y_train)
+    # Dự đoán trên tập kiểm tra
+    predictions = model.predict(X_test)
+
+    # Chuẩn hóa kết quả dự đoán (ví dụ: làm tròn về số nguyên)
+    rounded_predictions = np.round(predictions).astype(int)
+
+    # Tạo DataFrame mới với các cột nhãn dự đoán
+    predicted_dataFrame = pd.DataFrame(rounded_predictions, columns=['classifyRole', 'classifyLevel'])
+    # print(predicted_dataFrame["classifyRole"])
+    objPredicted = json.loads(predicted_dataFrame.to_json())
+    listValuePredictedRole = []
+    for key in objPredicted["classifyRole"]:
+        listValuePredictedRole.append(objPredicted["classifyRole"][key])
+
+    listValuePredictedLevel = []
+    for key in objPredicted["classifyLevel"]:
+        listValuePredictedLevel.append(objPredicted["classifyLevel"][key])
+
+    predictClassifyRole = np.array(listValuePredictedRole)
+    predictClassifyLevel = np.array(listValuePredictedLevel)
+    # Ánh xạ giá trị liên tục thành giá trị rời rạc
+    mappedRole = np.round(predictClassifyRole).astype(int)
+    mappedLevel = np.round(predictClassifyLevel).astype(int)
+
+    # Tính toán Kết Quả Phù Hợp Nhất
+    most_common_role = np.bincount(mappedRole).argmax()
+    most_common_level = np.bincount(mappedLevel).argmax()
+
+    # Kết Hợp Kết Quả
+    resultCombine = {'Role': most_common_role, 'Level': most_common_level}
+    print(resultCombine)
+
+    best_role_values = dataFrame.groupby('classifyLevel')['classifyRole'].idxmax().apply(lambda x: dataFrame.loc[x, 'classifyRole']).tolist()
+    best_level_values = dataFrame.groupby('classifyRole')['classifyLevel'].idxmax().apply(lambda x: dataFrame.loc[x, 'classifyLevel']).tolist()
+
+    # Tạo DataFrame mới chứa giá trị phù hợp nhất cho mỗi nhóm
+    result = pd.DataFrame({'classifyLevel': dataFrame['classifyLevel'].unique(), 'best_role': best_role_values, 'best_level': best_level_values})
+    print(result)
+    mse = mean_squared_error(y_test, predictions)
+    # # Dự đoán trên tập kiểm thử
+    # predictions = model.predict(X_test)
+
+    # # Đánh giá độ chính xác
+    # accuracy = accuracy_score(y_test, predictions)
+
+    # # Dữ liệu mới cần dự đoán
+    # new_features = np.array([[item["dob"], item["education"], item["expTimeTech"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in [dataTest]])
+
+    # # Dự đoán nhãn
+    # predicted_label = model.predict(new_features)
+
+    # # Tính ma trận confusion
+    # conf_matrix = confusion_matrix(y_test, predictions)
+
+    # # Tính precision, recall và F1-Score
+    # precision = precision_score(y_test, predictions, average='weighted')
+    # recall = recall_score(y_test, predictions, average='weighted')
+    # f1 = f1_score(y_test, predictions, average='weighted')
+
+    return {
+        "predict": {
+            # "result": predicted_label[0],
+            # "precision": precision,
+            # "recall": recall,
+            # "f1": f1,
+            "candidate": dataTest,
+        },
+        "mse": mse,
+        # "dataTrain": dataTrain
+    }

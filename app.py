@@ -29,8 +29,12 @@ def predicWithRandomForest(candidateId):
     if len(query):
         isPredictCandidate = request.args.get('isPredictCandidate', '').lower() in ['true', '1']
         CD =  Candidate(candidateId, db.recruitments, (isPredictCandidate))
-        getData = CD.dataProcessing();
-        predict = models.predicWithRandomForest(getData["dataTest"],getData["dataTrain"])
-    return utils.getResponseJsonFormat(predict)
+        getData = CD.dataProcessing()
+        predictLevel = models.predicWithRandomForest(getData["dataTest"],getData["dataTrain"], "classifyLevel")
+        predictRole = models.predicWithRandomForest(getData["dataTest"],getData["dataTrain"], "classifyRole")
+    return utils.getResponseJsonFormat({
+        "classifyRole": predictRole,
+        "classifyLevel": predictLevel
+    })
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=80, debug=True)
