@@ -65,6 +65,12 @@ class Candidate:
                 },
                 "classifyRole": {
                     "$exists": True
+                },
+                "scoreJobPosition": {
+                    "$exists": True
+                },
+                "scoreTechnique": {
+                    "$exists": True
                 }
             })
             listDataTrain = []
