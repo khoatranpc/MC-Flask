@@ -71,6 +71,9 @@ class Candidate:
                 },
                 "scoreTechnique": {
                     "$exists": True
+                },
+                "_id": {
+                    "$ne": ObjectId(self.id)
                 }
             })
             listDataTrain = []
