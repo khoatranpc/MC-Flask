@@ -46,7 +46,7 @@ def getNumberByBoolean(boolean):
 def handleData(data: dict, isPredictCandidate: bool):
     newData = {}
     for x in data:
-        if x == "scoreJobPosition" or x == "scoreTechnique" or x == "classifyRole" or x == "dob" or x == "classifyLevel" or x == "education" or x == "expTimeTech" or x == "expTimeTech" or x == "graduatedUniversity" or x == "levelTechnique" or x == "resourceApply" or x == "scoreSoftsSkill" or x=="specializedIt" or x =="teacherCertification" or x=="technique":
+        if x == "scoreJobPosition" or x == "scoreTechnique" or x == "classifyRole" or x == "dob" or x == "classifyLevel" or x == "education" or x == "expTimeTech" or x == "expTimeTeach" or x == "graduatedUniversity" or x == "levelTechnique" or x == "resourceApply" or x == "scoreSoftsSkill" or x=="specializedIt" or x =="teacherCertification" or x=="technique":
             newData[x]=data[x]
     # handle data, parse string to number
     newData['dob'] = calculate_age(newData['dob'].date())
