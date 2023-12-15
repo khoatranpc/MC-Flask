@@ -13,7 +13,7 @@ def predicWithRandomForest(dataTest, dataTrain, label: str):
     
 
     # Chia thành đặc trưng và nhãn
-    features = np.array([[item["scoreTechnique"],item["scoreJobPosition"],item["dob"], item["education"], item["expTimeTech"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in data])
+    features = np.array([[item["scoreTechnique"],item["scoreJobPosition"],item["dob"], item["education"], item["expTimeTech"], item["expTimeTeach"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in data])
     labels = np.array([item[label] for item in data])
 
     # Chia thành tập huấn luyện và tập kiểm thử
@@ -30,7 +30,7 @@ def predicWithRandomForest(dataTest, dataTrain, label: str):
     accuracy = accuracy_score(y_test, predictions)
 
     # Dữ liệu mới cần dự đoán
-    new_features = np.array([[item["scoreTechnique"],item["scoreJobPosition"],item["dob"], item["education"], item["expTimeTech"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in [dataTest]])
+    new_features = np.array([[item["scoreTechnique"],item["scoreJobPosition"],item["dob"], item["education"], item["expTimeTech"], item["expTimeTeach"], item["graduatedUniversity"], item["levelTechnique"], item["resourceApply"], item["scoreSoftsSkill"], item["specializedIt"], item["teacherCertification"], item["technique"]] for item in [dataTest]])
 
     # Dự đoán nhãn
     predicted_label = model.predict(new_features)
