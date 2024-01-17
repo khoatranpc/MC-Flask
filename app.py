@@ -7,7 +7,7 @@ import models
 
 app = Flask(__name__)
 CORS(app, origins='*')
-app.config['MONGO_URI']="mongodb+srv://khoatranpc:khoatranpc603@cluster0.ujmwmqk.mongodb.net/mindx-k18-build?tls=true&tlsAllowInvalidCertificates=true"
+app.config['MONGO_URI']="EXAMPLE"
 mongo = PyMongo(app)
 db=mongo.db
 
